@@ -8,3 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const mensajeElement = document.getElementById('mensaje-motivacional');
     mensajeElement.textContent = mensajes[Math.floor(Math.random() * mensajes.length)];
 });
+
+document.querySelector('.registro-btn').addEventListener('click', function(e) {
+  e.preventDefault();
+  window.location.href = '/registro';
+});
