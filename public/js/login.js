@@ -14,12 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify(userData),
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 localStorage.setItem('userEmail', userData.email);

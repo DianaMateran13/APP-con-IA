@@ -9,6 +9,7 @@ export interface IUser extends Document {
   password: string;
   telefono: string;
   pais: string;
+  photoUrl?: string;
 }
 
 const UserSchema: Schema = new Schema({
@@ -19,7 +20,8 @@ const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   telefono: { type: String, required: true },
-  pais: { type: String, required: true }
+  pais: { type: String, required: true },
+  photoUrl: { type: String }
 });
 
 export default mongoose.model<IUser>('User', UserSchema);

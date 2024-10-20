@@ -5,24 +5,10 @@
   },
   "connections": [
     {
-      "id": "8470934c-5cfc-4e78-a51d-675f5e453df2",
-      "lastUsed": {
-        "$date": {
-          "$numberLong": "1729372162213"
-        }
-      },
-      "favorite": {
-        "name": "App Energy Fit",
-        "color": "color1"
-      },
-      "savedConnectionType": "recent",
+      "id": "mi-conexion-local",
       "connectionOptions": {
-        "connectionString": "mongodb://localhost:27017/",
-        "oidc": {
-          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
-        }
+        "connectionString": "mongodb://localhost:27017/energyfit"
       }
     }
-  ],
-  "uri": "mongodb://localhost:27017/energyfit"
+  ]
 }
