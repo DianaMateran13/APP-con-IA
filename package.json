@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "app con IA",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm src/index.ts",
     "build": "tsc",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "GROQ_API_KEY=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 ts-node-dev --experimental-specifier-resolution=node --esm src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Diana Materan y Andrea Rossi",
@@ -14,18 +15,21 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/mongoose": "^5.11.96",
+    "@types/multer": "^1.4.12",
     "@types/node": "^16.18.114",
-    "ts-node-dev": "^1.1.8",
+    "@types/sharp": "^0.31.1",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@types/multer": "^1.4.12",
-    "@types/sharp": "^0.31.1",
     "body-parser": "^1.19.0",
     "dotenv": "^16.4.5",
     "express": "^4.17.1",
     "mongoose": "^6.0.12",
     "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2",
     "openai": "^4.68.1",
     "sharp": "^0.33.5"
   },

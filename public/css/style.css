@@ -196,3 +196,83 @@ main section h3 {
     border-radius: 50%;
     margin-bottom: 10px;
 }
+
+#asistente-virtual {
+    margin-top: 30px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#chat-messages {
+    height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#user-input {
+    width: calc(100% - 70px);
+    padding: 5px;
+}
+
+#send-question {
+    width: 60px;
+    padding: 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#send-question:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para la página de entrenamiento */
+#planes-entrenamiento, #seguimiento-actividad, #asistente-virtual {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#generar-rutina {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#generar-rutina:hover {
+    background-color: #45a049;
+}
+
+#registro-actividad input {
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#registro-actividad button {
+    background-color: #008CBA;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#registro-actividad button:hover {
+    background-color: #007B9A;
+}
+
+#progreso-actividad {
+    margin-top: 20px;
+}

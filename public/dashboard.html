@@ -10,18 +10,42 @@
 </head>
 <body>
     <div class="container">
-        <h1>Bienvenido a tu Dashboard de Energy Fit</h1>
+        <h1>Dashboard</h1>
         <div id="user-summary">
             <!-- Aquí se mostrará el resumen de los datos del usuario -->
         </div>
+        
+        <main>
+            <section id="perfil-section">
+                <h3>Perfil</h3>
+                <p>Actualiza tu información personal y preferencias.</p>
+            </section>
+            <section id="entrenamiento-section">
+                <h3>Entrenamiento</h3>
+                <p>Accede a tus rutinas y registra tu progreso.</p>
+            </section>
+            <section id="nutricion-section">
+                <h3>Nutrición</h3>
+                <p>Planifica tus comidas y sigue tu dieta.</p>
+            </section>
+        </main>
     </div>
+
     <nav class="bottom-nav">
-        <a href="/perfil"><i class="fas fa-user"></i> Perfil</a>
-        <a href="#entrenamiento"><i class="fas fa-dumbbell"></i> Entrenamiento</a>
-        <a href="#nutricion"><i class="fas fa-apple-alt"></i> Nutrición</a>
-        <a href="#estres"><i class="fas fa-spa"></i> Gestión del Estrés</a>
-        <a href="#sueno"><i class="fas fa-moon"></i> Sueño</a>
+        <a href="/perfil">
+            <i class="fas fa-user"></i>
+            <span>Perfil</span>
+        </a>
+        <a href="/entrenamiento">
+            <i class="fas fa-dumbbell"></i>
+            <span>Entrenamiento</span>
+        </a>
+        <a href="/nutricion">
+            <i class="fas fa-apple-alt"></i>
+            <span>Nutrición</span>
+        </a>
     </nav>
+
     <script src="/js/dashboard.js"></script>
 </body>
 </html>

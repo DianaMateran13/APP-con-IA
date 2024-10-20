@@ -1,22 +1,24 @@
-import OpenAI from 'openai';
-
-// Inicializar el cliente de OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
 // Función para enviar una pregunta al asistente virtual
 async function preguntarAsistente(pregunta) {
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: pregunta }],
+    const response = await fetch('/ask-assistant', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        question: pregunta,
+        context: 'entrenamiento'
+      }),
     });
-
-    return completion.choices[0].message.content;
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.answer;
   } catch (error) {
     console.error('Error al comunicarse con el asistente virtual:', error);
-    return 'Lo siento, ha ocurrido un error al procesar tu pregunta.';
+    throw error;
   }
 }
 

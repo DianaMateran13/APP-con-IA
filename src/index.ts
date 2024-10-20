@@ -1,18 +1,22 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
-import User from './models/User';
+import User from './models/User.js';
 import fs from 'fs';
 import multer from 'multer';
 import sharp from 'sharp';
-import OpenAI from 'openai';
+import fetch from 'node-fetch';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Cargar variables de entorno
 dotenv.config();
 
 const app = express();
-const port = 3001; // o cualquier otro puerto disponible
+const port = process.env.PORT || 3001;
 
 let mongodbUri = 'mongodb://localhost:27017/energyfit'; // URI por defecto
 
@@ -213,7 +217,11 @@ app.post('/update-profile', async (req, res) => {
     res.json({ success: true, message: 'Perfil actualizado con éxito' });
   } catch (error) {
     console.error('Error al actualizar el perfil:', error);
-    res.status(500).json({ success: false, message: 'Error al actualizar el perfil', error: error.message });
+    if (error instanceof Error) {
+      res.status(500).json({ success: false, message: 'Error al actualizar el perfil', error: error.message });
+    } else {
+      res.status(500).json({ success: false, message: 'Error desconocido al actualizar el perfil' });
+    }
   }
 });
 
@@ -247,25 +255,103 @@ app.post('/upload-photo', upload.single('photo'), async (req, res) => {
   }
 });
 
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+console.log('GROQ API URL:', GROQ_API_URL);
+
+interface GroqResponse {
+  choices: Array<{
+    message: {
+      content: string;
+    };
+  }>;
+}
+
 app.post('/ask-assistant', async (req, res) => {
   try {
-    const { question } = req.body;
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
+    const { question, context } = req.body;
+
+    if (!GROQ_API_KEY) {
+      throw new Error('GROQ_API_KEY no está configurada');
+    }
+
+    let systemMessage = "Eres un asistente virtual útil y amigable.";
+    if (context === 'entrenamiento') {
+      systemMessage = "Eres un entrenador personal virtual especializado en crear planes de entrenamiento y responder preguntas sobre fitness y ejercicio.";
+    }
+
+    const response = await fetch(GROQ_API_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: "mixtral-8x7b-32768",
+        messages: [
+          { role: "system", content: systemMessage },
+          { role: "user", content: question }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      })
     });
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: question }],
-    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
 
-    res.json({ answer: completion.choices[0].message.content });
+    const data = await response.json() as GroqResponse;
+    res.json({ answer: data.choices[0].message.content });
+
   } catch (error) {
     console.error('Error al comunicarse con el asistente virtual:', error);
-    res.status(500).json({ error: 'Error al procesar la pregunta' });
+    if (error instanceof Error) {
+      res.status(500).json({ error: 'Error al procesar la pregunta', message: error.message });
+    } else {
+      res.status(500).json({ error: 'Error desconocido al procesar la pregunta' });
+    }
   }
 });
 
+app.get('/entrenamiento', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/entrenamiento.html'));
+});
+
+async function testGroqApiConnection() {
+  try {
+    const response = await fetch(GROQ_API_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: "mixtral-8x7b-32768",
+        messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          { role: "user", content: "Hello, are you working?" }
+        ]
+      })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Groq API test successful. Response:', data);
+    } else {
+      console.error('Groq API test failed. Status:', response.status, 'StatusText:', response.statusText);
+      const errorText = await response.text();
+      console.error('Error details:', errorText);
+    }
+  } catch (error) {
+    console.error('Error testing Groq API connection:', error);
+  }
+}
+
+// Llama a esta función cuando inicies tu servidor
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
+  console.log('GROQ_API_KEY:', GROQ_API_KEY ? 'Configurada' : 'No configurada');
+  testGroqApiConnection();
 });

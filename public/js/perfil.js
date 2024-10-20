@@ -88,6 +88,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Funcionalidad para generar rutina
+    const generarRutinaBtn = document.getElementById('generar-rutina');
+    const rutinaActual = document.getElementById('rutina-actual');
+
+    generarRutinaBtn.addEventListener('click', async () => {
+        const respuesta = await preguntarAsistente('Genera una rutina de entrenamiento personalizada para mí');
+        rutinaActual.innerHTML = `<h4>Tu Rutina Personalizada:</h4><p>${respuesta}</p>`;
+    });
+
+    // Funcionalidad para registrar actividad
+    const registroActividadForm = document.getElementById('registro-actividad');
+    const progresoActividad = document.getElementById('progreso-actividad');
+
+    registroActividadForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const ejercicio = document.getElementById('ejercicio').value;
+        const repeticiones = document.getElementById('repeticiones').value;
+        const series = document.getElementById('series').value;
+
+        const nuevaActividad = document.createElement('p');
+        nuevaActividad.textContent = `${ejercicio}: ${series} series de ${repeticiones} repeticiones`;
+        progresoActividad.appendChild(nuevaActividad);
+
+        // Limpiar el formulario
+        registroActividadForm.reset();
+    });
+
     // Manejar la interacción con el asistente virtual
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-question');
@@ -99,23 +126,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Mostrar la pregunta del usuario
             chatMessages.innerHTML += `<p><strong>Tú:</strong> ${pregunta}</p>`;
             
-            try {
-                // Enviar la pregunta al servidor
-                const response = await fetch('/ask-assistant', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ question: pregunta }),
-                });
-                const data = await response.json();
-                
-                // Mostrar la respuesta del asistente
-                chatMessages.innerHTML += `<p><strong>Asistente:</strong> ${data.answer}</p>`;
-            } catch (error) {
-                console.error('Error al comunicarse con el asistente:', error);
-                chatMessages.innerHTML += `<p><strong>Error:</strong> No se pudo obtener una respuesta del asistente.</p>`;
-            }
+            // Obtener respuesta del asistente
+            const respuesta = await preguntarAsistente(pregunta);
+            
+            // Mostrar la respuesta del asistente
+            chatMessages.innerHTML += `<p><strong>Asistente:</strong> ${respuesta}</p>`;
             
             // Limpiar el campo de entrada
             userInput.value = '';

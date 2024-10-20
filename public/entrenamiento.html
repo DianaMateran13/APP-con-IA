@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Fit - Entrenamiento</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Entrenamiento</h1>
+        
+        <section id="planes-entrenamiento">
+            <h2>Planes de Entrenamiento</h2>
+            <p>Aquí encontrarás tus rutinas personalizadas según tu nivel y objetivos.</p>
+            <form id="objetivos-form">
+                <label for="nivel">Nivel:</label>
+                <select id="nivel" name="nivel">
+                    <option value="principiante">Principiante</option>
+                    <option value="intermedio">Intermedio</option>
+                    <option value="avanzado">Avanzado</option>
+                </select>
+                <label for="objetivo">Objetivo principal:</label>
+                <select id="objetivo" name="objetivo">
+                    <option value="perdida-peso">Pérdida de peso</option>
+                    <option value="ganancia-musculo">Ganancia de músculo</option>
+                    <option value="resistencia">Mejorar resistencia</option>
+                    <option value="flexibilidad">Aumentar flexibilidad</option>
+                </select>
+                <button type="submit" id="generar-rutina">Generar Rutina Personalizada</button>
+            </form>
+            <div id="rutina-actual"></div>
+        </section>
+        
+        <section id="seguimiento-actividad">
+            <h2>Seguimiento de Actividad</h2>
+            <form id="registro-actividad">
+                <input type="text" id="ejercicio" placeholder="Ejercicio realizado" required>
+                <input type="number" id="repeticiones" placeholder="Repeticiones" required>
+                <input type="number" id="series" placeholder="Series" required>
+                <input type="date" id="fecha" required>
+                <button type="submit">Registrar Actividad</button>
+            </form>
+            <div id="progreso-actividad"></div>
+        </section>
+        
+        <section id="asistente-virtual">
+            <h2>Asistente Virtual de Entrenamiento</h2>
+            <div id="chat-container">
+                <div id="chat-messages"></div>
+                <input type="text" id="user-input" placeholder="Pregunta sobre tu entrenamiento...">
+                <button id="send-question">Enviar</button>
+            </div>
+        </section>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="/dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="/perfil">
+            <i class="fas fa-user"></i>
+            <span>Perfil</span>
+        </a>
+        <a href="/entrenamiento">
+            <i class="fas fa-dumbbell"></i>
+            <span>Entrenamiento</span>
+        </a>
+        <a href="/nutricion">
+            <i class="fas fa-apple-alt"></i>
+            <span>Nutrición</span>
+        </a>
+    </nav>
+
+    <script type="module" src="/js/entrenamiento.js"></script>
+</body>
+</html>
