@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
@@ -5,6 +6,10 @@ import User from './models/User';
 import fs from 'fs';
 import multer from 'multer';
 import sharp from 'sharp';
+import OpenAI from 'openai';
+
+// Cargar variables de entorno
+dotenv.config();
 
 const app = express();
 const port = 3001; // o cualquier otro puerto disponible
@@ -239,6 +244,25 @@ app.post('/upload-photo', upload.single('photo'), async (req, res) => {
   } catch (error) {
     console.error('Error al subir la foto:', error);
     res.status(500).json({ success: false, message: 'Error al subir la foto' });
+  }
+});
+
+app.post('/ask-assistant', async (req, res) => {
+  try {
+    const { question } = req.body;
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
+    });
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: question }],
+    });
+
+    res.json({ answer: completion.choices[0].message.content });
+  } catch (error) {
+    console.error('Error al comunicarse con el asistente virtual:', error);
+    res.status(500).json({ error: 'Error al procesar la pregunta' });
   }
 });
 

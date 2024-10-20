@@ -1,3 +1,5 @@
+import { preguntarAsistente } from './asistente-virtual.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const userEmail = localStorage.getItem('userEmail');
     const form = document.getElementById('profile-form');
@@ -83,6 +85,40 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else {
             alert('Por favor, selecciona una foto primero');
+        }
+    });
+
+    // Manejar la interacción con el asistente virtual
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-question');
+    const chatMessages = document.getElementById('chat-messages');
+
+    sendButton.addEventListener('click', async () => {
+        const pregunta = userInput.value.trim();
+        if (pregunta) {
+            // Mostrar la pregunta del usuario
+            chatMessages.innerHTML += `<p><strong>Tú:</strong> ${pregunta}</p>`;
+            
+            try {
+                // Enviar la pregunta al servidor
+                const response = await fetch('/ask-assistant', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: pregunta }),
+                });
+                const data = await response.json();
+                
+                // Mostrar la respuesta del asistente
+                chatMessages.innerHTML += `<p><strong>Asistente:</strong> ${data.answer}</p>`;
+            } catch (error) {
+                console.error('Error al comunicarse con el asistente:', error);
+                chatMessages.innerHTML += `<p><strong>Error:</strong> No se pudo obtener una respuesta del asistente.</p>`;
+            }
+            
+            // Limpiar el campo de entrada
+            userInput.value = '';
         }
     });
 });
