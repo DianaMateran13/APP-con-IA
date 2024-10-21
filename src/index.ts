@@ -8,6 +8,7 @@ import fs from 'fs';
 import multer from 'multer';
 import sharp from 'sharp';
 import fetch from 'node-fetch';
+import Groq from "groq-sdk";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -256,8 +257,9 @@ app.post('/upload-photo', upload.single('photo'), async (req, res) => {
 });
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
+console.log(GROQ_API_KEY);
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-console.log('GROQ API URL:', GROQ_API_URL);
+console.log('GROQ_API_KEY:', process.env.GROQ_API_KEY ? 'Configurada' : 'No configurada');
 
 interface GroqResponse {
   choices: Array<{
@@ -319,39 +321,41 @@ app.get('/entrenamiento', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/entrenamiento.html'));
 });
 
+import axios from 'axios';
+
 async function testGroqApiConnection() {
   try {
-    const response = await fetch(GROQ_API_URL, {
-      method: 'POST',
+    console.log('Iniciando prueba de conexión a Groq API...');
+    console.log('GROQ_API_KEY:', GROQ_API_KEY ? 'Configurada' : 'No configurada');
+    
+    const response = await axios.post(GROQ_API_URL, {
+      model: "mixtral-8x7b-32768",
+      messages: [
+        { role: "system", content: "You are a helpful assistant." },
+        { role: "user", content: "Hello, are you working?" }
+      ]
+    }, {
       headers: {
         'Authorization': `Bearer ${GROQ_API_KEY}`,
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: "mixtral-8x7b-32768",
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: "Hello, are you working?" }
-        ]
-      })
+      }
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Groq API test successful. Response:', data);
-    } else {
-      console.error('Groq API test failed. Status:', response.status, 'StatusText:', response.statusText);
-      const errorText = await response.text();
-      console.error('Error details:', errorText);
-    }
+    console.log('Groq API test successful. Response:', response.data);
   } catch (error) {
-    console.error('Error testing Groq API connection:', error);
+    if (axios.isAxiosError(error)) {
+      console.error('Error en la solicitud a Groq API:', error.message);
+      if (error.response) {
+        console.error('Detalles del error:', error.response.data);
+      }
+    } else {
+      console.error('Error desconocido:', error);
+    }
   }
 }
 
 // Llama a esta función cuando inicies tu servidor
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
-  console.log('GROQ_API_KEY:', GROQ_API_KEY ? 'Configurada' : 'No configurada');
   testGroqApiConnection();
 });

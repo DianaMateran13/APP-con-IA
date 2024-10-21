@@ -1,17 +1,7 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  nombre: String,
-  email: String,
-  password: String,
-  edad: Number,
-  peso: Number,
-  estatura: Number,
-  telefono: String,
-  pais: String,
-  photoUrl: String
+  // ... (definición del esquema)
 });
 
-const User = mongoose.model('User', userSchema);
-
-export default User;
+export default mongoose.model('User', userSchema);

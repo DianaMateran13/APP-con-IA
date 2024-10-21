@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const respuesta = await preguntarAsistente(prompt);
+            console.log(respuesta);
             rutinaActual.innerHTML = `<h3>Tu Rutina Personalizada:</h3><div>${respuesta.replace(/\n/g, '<br>')}</div>`;
         } catch (error) {
             console.error('Error al generar la rutina:', error);
